@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useReducer, useRef } from 'react';
 import './App.css';
 
 interface Todo {
@@ -24,9 +24,27 @@ function reducer(state: Todo[], action: ActionType) {
 }
 const [todos, dispatch] = useReducer(reducer, []);
 
+const todoRef = useRef<HTMLInputElement>(null);
+const addTodo = () =>{
+ if(todoRef.current){
+  dispatch({
+    type: "ADD",
+    text: todoRef.current.value
+  })
+  todoRef.current.value = "";
+ }
+}
 return (
     <div className="App">
-      
+      <input type="text" ref= {todoRef} />
+      <button onClick={addTodo}>Add</button>
+      {
+        todos.map((todo) => (
+          <div key={todo.id}>
+            {todo.text}
+          </div>
+        ))
+      }
     </div>
   );
 }
