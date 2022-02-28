@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useReducer } from 'react';
 import './App.css';
 
+interface Todo {
+  id: number,
+  text: string,
+}
+type ActionType = {type: "ADD"; text: string} | {type: "DELETE"; id: number}
 function App() {
-  return (
+
+function reducer(state: Todo[], action: ActionType) {
+ switch (action.type) {
+   case "ADD":
+     return [
+       ...state,
+       {
+         id: state.length,
+         text: action.text,
+       }
+     ];
+     case "DELETE":
+       return state.filter(({id}) => id !== action.id);
+ }
+}
+const [todos, dispatch] = useReducer(reducer, []);
+
+return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
     </div>
   );
 }
