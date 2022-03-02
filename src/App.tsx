@@ -1,4 +1,4 @@
-import { useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import './App.css';
 
 interface Todo {
@@ -24,6 +24,20 @@ function reducer(state: Todo[], action: ActionType) {
 }
 const [todos, dispatch] = useReducer(reducer, []);
 
+useEffect(() =>{
+  localStorage.setItem('todos', JSON.stringify(todos));
+}, [todos])
+
+const getLocalItems = () =>{
+  let list = localStorage.getItem('todos');
+
+  if(list) {
+    return JSON.stringify(localStorage.getItem('todos'));
+  } else {
+    return [];
+  }
+}
+
 const todoRef = useRef<HTMLInputElement>(null);
 const addTodo = () =>{
  if(todoRef.current){
@@ -35,17 +49,18 @@ const addTodo = () =>{
  }
 }
 return (
-    <div className="App">
-      <input type="text" ref= {todoRef} />
-      <button onClick={addTodo}>Add</button>
+     <div className="text-center mt-5">
+     <input type="text" ref= {todoRef} />
+      <button className="btn-reguler" onClick={addTodo}>ADD</button>
       {
         todos.map((todo) => (
-          <div key={todo.id}>
+          <div className="item-text" key={todo.id}>
             {todo.text}
+            <button className="btn-reguler2" onClick={() => dispatch({type: "DELETE", id: todo.id})}>Remove</button>
           </div>
         ))
       }
-    </div>
+     </div>
   );
 }
 
